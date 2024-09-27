@@ -48,7 +48,6 @@ std::pair<bool, ll> CanFinishOff(ll ourSoldiers, ll tmpHpTaverna, ll tmpResult, 
         }
         tmpResult++;
     }
-
     if (enemySoldiers <= 0 && tmpHpTaverna <= 0)
     {
         return {true, tmpResult};
@@ -63,10 +62,19 @@ std::pair<bool, ll> CanFinishOff(ll ourSoldiers, ll tmpHpTaverna, ll tmpResult, 
 
 4       1      2     3
 */
+// 250 250
+// 187 154
+// 187 218
+// 1
+// 499
+// 1
 
-// y - здоровье казармы
-// x - количество бойцов
-// p - прирощение вражеских бойцов от казармы
+// 1
+// 1
+// 1
+//  y - здоровье казармы
+//  x - количество бойцов
+//  p - прирощение вражеских бойцов от казармы
 int CalculateQuantityRoundsForWin(long long x, long long y, long long p)
 {
     int result = 1;
@@ -78,10 +86,14 @@ int CalculateQuantityRoundsForWin(long long x, long long y, long long p)
     std::vector<int> answers;
     while (x > 0 && y > 0 && p > 0)
     {
-        auto canFinish0ff = CanFinishOff(x, y, result, enemySoldiers, p);
-        if (canFinish0ff.first)
+        if ((x * 2) > y)
         {
-            answers.push_back(canFinish0ff.second);
+
+            auto canFinish0ff = CanFinishOff(x, y, result, enemySoldiers, p);
+            if (canFinish0ff.first)
+            {
+                answers.push_back(canFinish0ff.second);
+            }
         }
         auto deltaSoldiers = x - enemySoldiers; // 25-10=15
         if (deltaSoldiers < 0)
@@ -95,9 +107,9 @@ int CalculateQuantityRoundsForWin(long long x, long long y, long long p)
         {
             enemySoldiers += p;
         }
-        if (x == y && x == p)
+        if ((x == y && x == enemySoldiers) || (x == enemySoldiers && (x - enemySoldiers) < y))
         {
-            return -1;
+            break;
         }
         result++;
     }
@@ -112,7 +124,9 @@ int CalculateQuantityRoundsForWin(long long x, long long y, long long p)
     }
     return -1;
 }
-
+// 499    499
+// 500 -> 1  ->
+// 499    499
 int main()
 {
     long long x, y, p;
@@ -121,12 +135,15 @@ int main()
     std::cin >> p;
     std::cout << CalculateQuantityRoundsForWin(x, y, p);
 }
-// 250    250    250     250    250    128    128
-// 500 -> 250 -> 218 ->  186 -> 154 ->  0 ->   0
-// 218    218    218     218    218    122     0
-//         1      2       3      4      5      6
-// 6
-// 8
-// 250     250    250    250    250
-// 500 ->  250 -> 226 -> 202 -> 202
-// 226     226    226    226
+// 250
+// 500
+// 188
+//  250    250    250     250    250    128    128
+//  500 -> 250 -> 218 ->  186 -> 154 ->  0 ->   0
+//  218    218    218     218    218    122     0
+//          1      2       3      4      5      6
+//  6
+//  8
+//  250     250    250    250    250
+//  500 ->  250 -> 226 -> 202 -> 202
+//  226     226    226    226
